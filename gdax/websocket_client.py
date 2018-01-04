@@ -18,8 +18,8 @@ from gdax.gdax_auth import get_auth_headers
 
 
 class WebsocketClient(object):
-    def __init__(self, url="wss://ws-feed.gdax.com", products=None, message_type="subscribe", mongo_collection=None,
-                 should_print=True, auth=False, api_key="", api_secret="", api_passphrase="", channels=None):
+    def __init__(self, url="wss://ws-feed.gdax.com", products=["BTC-USD", "BCH-USD", "ETH-USD", "ETH-BTC", "LTC-USD", "LTC-BTC"], message_type="subscribe", mongo_collection=None,
+                 should_print=True, auth=False, api_key="", api_secret="", api_passphrase="", channels=None, caller=None):
         self.url = url
         self.products = products
         self.channels = channels
@@ -34,6 +34,8 @@ class WebsocketClient(object):
         self.api_passphrase = api_passphrase
         self.should_print = should_print
         self.mongo_collection = mongo_collection
+        self.term_count = 0
+        self.caller = caller
 
     def start(self):
         def _go():
@@ -47,11 +49,6 @@ class WebsocketClient(object):
         self.thread.start()
 
     def _connect(self):
-        if self.products is None:
-            self.products = ["BTC-USD"]
-        elif not isinstance(self.products, list):
-            self.products = [self.products]
-
         if self.url[-1] == "/":
             self.url = self.url[:-1]
 
@@ -120,6 +117,7 @@ class WebsocketClient(object):
             print("\n-- Socket Closed --")
 
     def on_message(self, msg):
+        self.caller(msg)
         if self.should_print:
             print(msg)
         if self.mongo_collection:  # dump JSON to given mongo collection
