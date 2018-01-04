@@ -18,8 +18,7 @@ from gdax.gdax_auth import get_auth_headers
 
 
 class WebsocketClient(object):
-    def __init__(self, url="wss://ws-feed.gdax.com", products=["BTC-USD", "BCH-USD", "ETH-USD", "ETH-BTC", "LTC-USD", "LTC-BTC"], message_type="subscribe", mongo_collection=None,
-                 should_print=True, auth=False, api_key="", api_secret="", api_passphrase="", channels=None, caller=None):
+    def __init__(self, url="wss://ws-feed.gdax.com", products=["BTC-USD", "BCH-USD", "ETH-USD", "ETH-BTC", "LTC-USD", "LTC-BTC"], message_type="subscribe", mongo_collection=None, should_print=True, auth=False, api_key="", api_secret="", api_passphrase="", channels=None, caller=None):
         self.url = url
         self.products = products
         self.channels = channels
